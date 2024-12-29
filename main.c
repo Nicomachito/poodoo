@@ -7,18 +7,29 @@
 
 #define NOTES_FOLDER "/home/marcos/notes/journals/"
 #define MAX_FILENAME 256
-#define MAX_LINE 256 #define 
-#TODO_PATTERN "- TODO" 
+#define MAX_LINE 256  
+#define TODO_PATTERN "- TODO" 
+#define DONE_PATTERN "- DONE" 
 
 struct ToDo {
     int todoType;
-    char text;
-    char path;
+    char text[MAX_LINE];
+    char path[MAX_FILENAME];
 };
+
 enum todoType {
     TODO,
     DONE
 };
+
+int getTodoType (char* todoText) {
+    if(strstr(todoText,TODO_PATTERN) != NULL) // check if line is a TODO
+        return TODO;
+    else if(strstr(todoText,DONE_PATTERN) != NULL) // check if line is a TODO
+        return DONE;
+    else return -1;
+}
+
 
 int main(){
   DIR *d;
@@ -49,8 +60,9 @@ int main(){
     }        
     
     char line_buffer[MAX_LINE];
+
     while(fgets(line_buffer,sizeof(line_buffer),file)){
-        if(strstr(line_buffer,TODO_PATTERN) != NULL) // check if line is a TODO
+        if(getTodoType(line_buffer) >=  0) // check if line is a TODO
             printf("%s",line_buffer);
      }
    }
